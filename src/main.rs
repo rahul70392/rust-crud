@@ -7,33 +7,32 @@ use std::env;
 #[macro_use]
 extern crate serde_derive;
 
-
-//Model User struct
-#[derive(Serialize,Deserialize)]
+//Model: USer struct with id, name, email
+#[derive(Serialize, Deserialize)]
 struct User {
-    id : Option<i32>,
-    name : String,
-    email : String
+    id: Option<i32>,
+    name: String,
+    email: String,
 }
 
-//Database URL
-const DB_URL : &str = env!("DATABASE_URL");
+//DATABASE_URL
+const DB_URL: &str = env!("DATABASE_URL");
 
 //constants
 const OK_RESPONSE: &str = "HTTP/1.1 200 OK\r\nContent-Type: application/json\r\n\r\n";
 const NOT_FOUND: &str = "HTTP/1.1 404 NOT FOUND\r\n\r\n";
 const INTERNAL_SERVER_ERROR: &str = "HTTP/1.1 500 INTERNAL SERVER ERROR\r\n\r\n";
 
-//Main Function
+//main function
 fn main() {
-    // Set Database
+    //Set database
     if let Err(e) = set_database() {
         println!("Error: {}", e);
         return;
     }
 
-    //Start server and print port
-    let listener = TcpListener::bind(format!(0.0.0.0:8080)).unwrap();
+    //start server and print port
+    let listener = TcpListener::bind(format!("0.0.0.0:8080")).unwrap();
     println!("Server started at port 8080");
 
     //handle the client
@@ -48,7 +47,6 @@ fn main() {
         }
     }
 }
-
 
 //handle_client function
 fn handle_client(mut stream: TcpStream) {
@@ -174,8 +172,6 @@ fn handle_delete_request(request: &str) -> (String, String) {
         _ => (INTERNAL_SERVER_ERROR.to_string(), "Error".to_string()),
     }
 }
-
-
 
 //set_database function
 fn set_database() -> Result<(), PostgresError> {
